@@ -248,8 +248,11 @@ header h1 {
         border: 1px solid rgba(50, 50, 50, 0.9);
     }
 
-    .card:hover .card-text {
-        color: rgba(25, 25, 25, 1); 
+
+
+    .card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     }
 
     .btn:hover {
