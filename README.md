@@ -1,5 +1,5 @@
 # FSJS-TD-Unit5-Proj
- Fifth project for the treehouse tech degree
+ Fifth project for the treehouse tech degree program
 
 Modal Background Color Update
 The background color of the modal has been modified to lightgray to offer a neater appearance and ensure enhanced contrast with its content.
