@@ -7,6 +7,7 @@ initializeSearch();
 retrieveUsers();
 
 // ---------- EVENT LISTENERS ----------
+// Event listeners for card clicks and modal interactions
 galleryElem.addEventListener('click', processCardClick);
 document.addEventListener('keydown', processModalKeyInteraction);
 const searchForm = document.querySelector('form');
@@ -22,6 +23,7 @@ function retrieveUsers() {
         });
 }
 
+// Fetches data from the given url
 async function fetchData(url) {
     try {
         const response = await fetch(url);
@@ -32,6 +34,7 @@ async function fetchData(url) {
 }
 
 // ---------- SEARCH FUNCTIONALITY ----------
+// Initializes the search form
 function initializeSearch() {
     const searchSection = document.querySelector('.search-container');
     const searchFormHTML = `
@@ -42,6 +45,7 @@ function initializeSearch() {
     searchSection.insertAdjacentHTML('beforeend', searchFormHTML);
 }
 
+// Executes the search and displays the results
 function executeSearch(event) {
     event.preventDefault();
     const searchText = event.target[0].value.toLowerCase();
@@ -65,6 +69,7 @@ function executeSearch(event) {
 }
 
 // ---------- DISPLAY AND MODAL FUNCTIONALITIES ----------
+// Displays the users in the gallery
 function displayUsers(userData) {
     const userCards = userData.map((user, idx) => `
         <div id=${idx} class="card">
@@ -80,6 +85,7 @@ function displayUsers(userData) {
     galleryElem.innerHTML = userCards;
 }
 
+// Sets up the modal structure
 function setupModalStructure() {
     const modalHTML = `
         <div class="modal-container">
@@ -99,6 +105,7 @@ function setupModalStructure() {
     modalControlsElem = document.querySelector('.modal-btn-container');
 }
 
+// Processes card clicks and displays the modal
 function processCardClick(event) {
     const cardElem = event.target.closest('.card');
     if (cardElem) {
@@ -111,6 +118,7 @@ function processCardClick(event) {
     }
 }
 
+// Displays the modal with the user details
 function displayModal(user) {
     const modalContent = `
         <div class="modal-info-container">
@@ -128,6 +136,7 @@ function displayModal(user) {
     modalDiv.insertAdjacentHTML('beforeend', modalContent);
 }
 
+// Formats phone number and date
 function formatPhoneNumber(phone) {
     return phone.replace(/[^\d]+/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 }
@@ -136,11 +145,12 @@ function formatDate(date) {
     return date.replace(/(\d{4})-(\d{2})-(\d{2}).+/, '$2/$3/$1');
 }
 
+// Updates the modal controls based on the current index
 function updateModalControls() {
     prevBtn.style.display = currentIndex > 0 ? 'block' : 'none';
     nextBtn.style.display = (isSearchActive ? currentIndex < searchOutput.length - 1 : currentIndex < allUsers.length - 1) ? 'block' : 'none';
 }
-
+// Processes modal interactions
 function processModalInteraction(event) {
     const targetId = event.target.id;
 
@@ -155,12 +165,14 @@ function processModalInteraction(event) {
     }
 }
 
+// Switches to the previous or next user in the search results or all users
 function switchUser(retrievalFunction) {
     const newUser = retrievalFunction();
     modalElem.querySelector('.modal-info-container').remove();
     displayModal(newUser);
 }
 
+// Processes keydown events on the modal
 function processModalKeyInteraction(event) {
     if (!modalElem || modalElem.style.display === 'none') return;
 
@@ -181,16 +193,19 @@ function processModalKeyInteraction(event) {
     }
 }
 
+// Gets the previous or next user in the search results or all users
 function getPreviousUser() {
     activeUser = isSearchActive ? searchOutput[--currentIndex] : allUsers[--currentIndex];
     return activeUser;
 }
 
+// Gets the next user in the search results or all users
 function getNextUser() {
     activeUser = isSearchActive ? searchOutput[++currentIndex] : allUsers[++currentIndex];
     return activeUser;
 }
 
+// Closes the modal and removes the event listener
 function closeModal() {
     modalElem.style.display = 'none';
     modalElem.removeEventListener('click', processModalInteraction);
