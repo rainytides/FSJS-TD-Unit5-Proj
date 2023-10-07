@@ -25,13 +25,13 @@ function retrieveUsers() {
 
 // Fetches data from the given url
 async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        return response.ok ? response.json() : Promise.reject(new Error(response.statusText));
-    } catch (error) {
-        console.log('Error fetching data:', error);
+    const response = await fetch(url);
+    if (response.ok) {
+        return await response.json();
     }
+    return Promise.reject(new Error(response.statusText));
 }
+
 
 // ---------- SEARCH FUNCTIONALITY ----------
 // Initializes the search form
