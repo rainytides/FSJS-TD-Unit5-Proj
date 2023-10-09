@@ -49,6 +49,7 @@ function initializeSearch() {
 function executeSearch(event) {
     event.preventDefault();
     const searchText = event.target[0].value.toLowerCase();
+    currentIndex = 0;
 
     if (searchText === '') {
         isSearchActive = false;
@@ -67,6 +68,7 @@ function executeSearch(event) {
         }
     }
 }
+
 
 // ---------- DISPLAY AND MODAL FUNCTIONALITIES ----------
 // Displays the users in the gallery
@@ -110,7 +112,8 @@ function processCardClick(event) {
     const cardElem = event.target.closest('.card');
     if (cardElem) {
         currentIndex = parseInt(cardElem.id, 10);
-        activeUser = isSearchActive ? searchOutput[currentIndex] : allUsers[currentIndex];
+        const displayedUsers = isSearchActive ? searchOutput : allUsers; 
+        activeUser = displayedUsers[currentIndex];
         displayModal(activeUser);
         modalElem.style.display = 'block';
         updateModalControls();
