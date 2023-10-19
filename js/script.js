@@ -48,7 +48,7 @@ function initializeSearch() {
 // Executes the search and displays the results
 function executeSearch(event) {
     event.preventDefault();
-    const searchText = event.target[0].value.toLowerCase();
+    const searchText = event.target[0].value.toLowerCase().trim();
     currentIndex = 0;
 
     if (searchText === '') {
