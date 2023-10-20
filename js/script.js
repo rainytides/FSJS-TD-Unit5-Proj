@@ -8,7 +8,7 @@ retrieveUsers();
 
 // ---------- EVENT LISTENERS ----------
 // Event listeners for card clicks and modal interactions
-galleryElem.addEventListener('click', processCardClick);
+galleryElem.addEventListener('click', handleCardClick);
 document.addEventListener('keydown', processModalKeyInteraction);
 const searchForm = document.querySelector('form');
 searchForm.addEventListener('submit', executeSearch);
@@ -42,13 +42,24 @@ function initializeSearch() {
             <input type="search" id="search-input" class="search-input" placeholder="Search...">
             <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
         </form>`;
+    
     searchSection.insertAdjacentHTML('beforeend', searchFormHTML);
+
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', executeSearch);
 }
 
 // Executes the search and displays the results
 function executeSearch(event) {
     event.preventDefault();
-    const searchText = event.target[0].value.toLowerCase().trim();
+
+    let searchText;
+    if (event.type === 'submit') {
+        searchText = event.target[0].value.toLowerCase().trim();
+    } else {
+        searchText = event.target.value.toLowerCase().trim();
+    }
+
     currentIndex = 0;
 
     if (searchText === '') {
@@ -56,6 +67,7 @@ function executeSearch(event) {
         displayUsers(allUsers);
     } else {
         isSearchActive = true;
+
         searchOutput = allUsers.filter(user => {
             const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
             return fullName.includes(searchText);
@@ -84,22 +96,30 @@ function displayUsers(userData) {
                 <p class="card-text cap">${user.location.state}</p>
             </div>
         </div>`).join('');
+
     galleryElem.innerHTML = userCards;
+    setupModalStructure();
 }
+
 
 // Sets up the modal structure
 function setupModalStructure() {
-    const modalHTML = `
-        <div class="modal-container">
-            <div class="modal">
-                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-            </div> 
-            <div class="modal-btn-container">
-                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-                <button type="button" id="modal-next" class="modal-next btn">Next</button>
-            </div>
-        </div>`;
-    galleryElem.insertAdjacentHTML('beforeend', modalHTML);
+    const existingModal = document.querySelector('.modal-container');
+
+    if (!existingModal) {
+        const modalHTML = `
+            <div class="modal-container">
+                <div class="modal">
+                    <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                </div> 
+                <div class="modal-btn-container">
+                    <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                    <button type="button" id="modal-next" class="modal-next btn">Next</button>
+                </div>
+            </div>`;
+        galleryElem.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
     modalElem = document.querySelector('.modal-container');
     modalElem.style.display = 'none';
     prevBtn = document.querySelector('#modal-prev');
@@ -107,19 +127,22 @@ function setupModalStructure() {
     modalControlsElem = document.querySelector('.modal-btn-container');
 }
 
-// Processes card clicks and displays the modal
-function processCardClick(event) {
+
+// Handles card clicks in the gallery
+function handleCardClick(event) {
     const cardElem = event.target.closest('.card');
-    if (cardElem) {
-        currentIndex = parseInt(cardElem.id, 10);
-        const displayedUsers = isSearchActive ? searchOutput : allUsers; 
-        activeUser = displayedUsers[currentIndex];
-        displayModal(activeUser);
-        modalElem.style.display = 'block';
-        updateModalControls();
-        modalElem.addEventListener('click', processModalInteraction);
-    }
+    if (!cardElem) return;
+
+    currentIndex = parseInt(cardElem.id, 10);
+    const displayedUsers = isSearchActive ? searchOutput : allUsers;
+    activeUser = displayedUsers[currentIndex];
+
+    displayModal(activeUser);
+    modalElem.style.display = 'block';
+    updateModalControls();
+    modalElem.addEventListener('click', processModalInteraction);
 }
+
 
 // Displays the modal with the user details
 function displayModal(user) {
@@ -153,6 +176,7 @@ function updateModalControls() {
     prevBtn.style.display = currentIndex > 0 ? 'block' : 'none';
     nextBtn.style.display = (isSearchActive ? currentIndex < searchOutput.length - 1 : currentIndex < allUsers.length - 1) ? 'block' : 'none';
 }
+
 // Processes modal interactions
 function processModalInteraction(event) {
     const targetId = event.target.id;
@@ -196,7 +220,7 @@ function processModalKeyInteraction(event) {
     }
 }
 
-// Gets the previous or next user in the search results or all users
+// Gets the previous user in the search results or all users
 function getPreviousUser() {
     activeUser = isSearchActive ? searchOutput[--currentIndex] : allUsers[--currentIndex];
     return activeUser;
