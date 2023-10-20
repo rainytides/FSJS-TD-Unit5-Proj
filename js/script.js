@@ -2,9 +2,11 @@
 const galleryElem = document.getElementById('gallery');
 let currentIndex, allUsers, activeUser, modalElem, modalDetailsElem, searchOutput, prevBtn, nextBtn, modalControlsElem, isSearchActive = false;
 
+
 // ---------- INITIALIZATION ----------
 initializeSearch();
 retrieveUsers();
+
 
 // ---------- EVENT LISTENERS ----------
 // Event listeners for card clicks and modal interactions
@@ -12,6 +14,7 @@ galleryElem.addEventListener('click', handleCardClick);
 document.addEventListener('keydown', processModalKeyInteraction);
 const searchForm = document.querySelector('form');
 searchForm.addEventListener('submit', executeSearch);
+
 
 // ---------- FETCH USER DATA ----------
 function retrieveUsers() {
@@ -101,7 +104,6 @@ function displayUsers(userData) {
     setupModalStructure();
 }
 
-
 // Sets up the modal structure
 function setupModalStructure() {
     const existingModal = document.querySelector('.modal-container');
@@ -127,7 +129,6 @@ function setupModalStructure() {
     modalControlsElem = document.querySelector('.modal-btn-container');
 }
 
-
 // Handles card clicks in the gallery
 function handleCardClick(event) {
     const cardElem = event.target.closest('.card');
@@ -142,7 +143,6 @@ function handleCardClick(event) {
     updateModalControls();
     modalElem.addEventListener('click', processModalInteraction);
 }
-
 
 // Displays the modal with the user details
 function displayModal(user) {
